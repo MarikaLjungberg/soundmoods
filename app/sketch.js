@@ -1,6 +1,7 @@
-let fft, polySynth, soundLoop, loopIntervalInSeconds;
+let fft, polySynth, soundLoop, loopIntervalInSeconds, tempoSlider;
 const numOfBuckets = 256;
-const defaultAmp = 0.1;
+const defaultAmp = 0.005;
+const defaultTempo = 0.2;
 const playingColour = '#84d99e'; // #4CAF50
 const notes = ['C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A5', 'A#5', 'B5', 'C5'];
 const noteFreqs = [261.63, 277.18, 293.66, 311.13, 329.63, 349.23, 369.99, 392.00, 415.30, 440.00, 466.16, 493.88, 523.25]; 
@@ -19,36 +20,18 @@ function setupWaves() {
   });
 }
 
-/*
-function createSliderDiv(freqSlider) {
+function createSliderDiv(slider) {
   let div = createDiv();
   div.style('transform: rotate(270deg);');
-  div.child(freqSlider);
+  div.child(slider);
   return div;
 }
-*/
-/*
-function setupSliders() {
-  freqSlider1 = createSlider(100, 1000, 100, 20);
-  let d1 = createSliderDiv(freqSlider1);
-  d1.position(-50,210);
-  freqSlider2 = createSlider(100, 1000, 100, 20);
-  let d2 = createSliderDiv(freqSlider2);
-  d2.position(-20,210);
-  freqSlider3 = createSlider(100, 1000, 100, 20);
-  let d3 = createSliderDiv(freqSlider3);
-  d3.position(10,210);
+
+function setupTempoSlider() {
+  tempoSlider = createSlider(1, 200, 20);
+  let d1 = createSliderDiv(tempoSlider);
+  d1.position(460,440);
 }
-*/
-/*
-function setupSoundToggleButton() {
-  let buttonDiv = createDiv();
-  toggleSoundButton = createButton('Play');
-  toggleSoundButton.mousePressed(toggleSound);
-  buttonDiv.child(toggleSoundButton);
-  buttonDiv.position(5,405);
-}
-*/
 
 function setupInstructions() {
   const instructions = "Use keyboard keys z,s,x,d,c,v,g,b,h,n,j,m and , to play around on the keyboard to find a chord that reflects your mood right now." +
@@ -87,13 +70,13 @@ function setup() {
   createCanvas(450, 400);
   setupInstructions();
   setupWaves();
+  setupTempoSlider();
   fft = new p5.FFT(0.8, 2048);
   setupKeyButtons();
   polySynth = new p5.PolySynth();
-  //reverb = new p5.Reverb();
-  //reverb.process(polySynth, 3, 2);
-  loopIntervalInSeconds = 0.2;
-  soundLoop = new p5.SoundLoop(onSoundLoop, loopIntervalInSeconds);
+  reverb = new p5.Reverb();
+  reverb.process(polySynth, 3, 2);
+  soundLoop = new p5.SoundLoop(onSoundLoop, defaultTempo);
 }
 
 function draw() {
@@ -125,13 +108,16 @@ function toggleOscillatorNote(note, index) {
   if (noteButtons[index].isPlaying) {
     noteButtons[index].noteButton.style('background-color', playingColour);
   }
+  if (chord.includes(note)) {
+    noteButtons[index].noteButton.style('border-color', playingColour);
+    noteButtons[index].noteButton.style('border-width', '3px');
+  }
   
   if (chord.length > 0) {
     soundLoop.start();
   } else {
     soundLoop.stop();
   }
-  console.log(chord);
 }
 
 function keyPressed() {
@@ -180,7 +166,7 @@ function keyPressed() {
 
 function checkPlayingNotes() {
   noteFreqs.forEach((freq, index) => {
-    if (fft.getEnergy(freq) > 220) {
+    if (fft.getEnergy(freq) > 200) {
       noteButtons[index].noteButton.style('background-color', playingColour);
     } else {
       if (notes[index].slice(notes[index].length - 2, notes[index].length - 1) === '#') {
@@ -195,12 +181,14 @@ function checkPlayingNotes() {
 }
 
 function handleKeyboardKeyPress(index) {
-  polySynth.play(notes[index], defaultAmp, 0, 1);
+  polySynth.play(notes[index], defaultAmp*50, 0, 1);
   noteButtons[index].isPlaying = true;
   noteButtons[index].noteButton.style('background-color', playingColour);
 }
 
 function onSoundLoop(timeFromNow) {
+  const intervalInSeconds = tempoSlider.value() / 100;
+  soundLoop.interval = intervalInSeconds;
   let noteIndex = Math.floor(Math.random() * chord.length);
-  polySynth.play(chord[noteIndex], 0.5, timeFromNow);
+  polySynth.play(chord[noteIndex], 0, timeFromNow, 0.1*intervalInSeconds*10);
 }
