@@ -1,22 +1,12 @@
-let wave1;
-let wave2;
-let wave3;
-let playing = false;
-let freqSlider1;
-let freqSlider2;
-let freqSlider3;
-let env1;
-let env2;
-let env3;
-let fft;
-let toggleSoundButton;
-const defaultAmp = 0.1;
+let fft, polySynth, soundLoop, loopIntervalInSeconds;
 const numOfBuckets = 256;
-let polysynth;
+const defaultAmp = 0.1;
+const playingColour = '#84d99e'; // #4CAF50
 const notes = ['C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A5', 'A#5', 'B5', 'C5'];
-let noteButtons = [];
 const noteFreqs = [261.63, 277.18, 293.66, 311.13, 329.63, 349.23, 369.99, 392.00, 415.30, 440.00, 466.16, 493.88, 523.25]; 
+let noteButtons = [];
 let waves = [];
+let chord = [];
 
 function setupWaves() {
   noteFreqs.forEach((freq, index) => {
@@ -75,6 +65,7 @@ function setupKeyButtons() {
     let noteButton = createButton(note.slice(0, note.length -1));
     noteButton.style('height', '70px');
     noteButton.style('width', '30px');
+    noteButton.style('border-radius', '3px');
     buttonDiv.child(noteButton);
     if (note.slice(note.length - 2, note.length - 1) === '#') {
       noteButton.style('background-color', '#000000');
@@ -98,20 +89,15 @@ function setup() {
   setupWaves();
   fft = new p5.FFT(0.8, 2048);
   setupKeyButtons();
-  polysynth = new p5.PolySynth();
+  polySynth = new p5.PolySynth();
   //reverb = new p5.Reverb();
-  //reverb.process(polysynth, 3, 2);
+  //reverb.process(polySynth, 3, 2);
+  loopIntervalInSeconds = 0.2;
+  soundLoop = new p5.SoundLoop(onSoundLoop, loopIntervalInSeconds);
 }
 
 function draw() {
-  if (playing) {
-    //background(232, 251, 244);
-    background(31, 88, 107);
-    //background(0);
-  } else {
-    //background(239, 239, 239);
-    background(31, 88, 107);
-  }
+  background(31, 88, 107);
 
   var spectrum = fft.analyze();
   noFill();
@@ -130,13 +116,22 @@ function toggleOscillatorNote(note, index) {
   if (noteButtons[index].isPlaying) {
     waves[index].amp(0);
     noteButtons[index].isPlaying = false;
+    chord.splice(chord.indexOf(note), 1);
   } else {
-    waves[index].amp(0.2);
+    waves[index].amp(defaultAmp);
     noteButtons[index].isPlaying = true;
+    chord.push(note);
   }
   if (noteButtons[index].isPlaying) {
-    noteButtons[index].noteButton.style('background-color', '#4CAF50');
+    noteButtons[index].noteButton.style('background-color', playingColour);
   }
+  
+  if (chord.length > 0) {
+    soundLoop.start();
+  } else {
+    soundLoop.stop();
+  }
+  console.log(chord);
 }
 
 function keyPressed() {
@@ -185,8 +180,8 @@ function keyPressed() {
 
 function checkPlayingNotes() {
   noteFreqs.forEach((freq, index) => {
-    if (fft.getEnergy(freq) > 250) {
-      noteButtons[index].noteButton.style('background-color', '#4CAF50');
+    if (fft.getEnergy(freq) > 220) {
+      noteButtons[index].noteButton.style('background-color', playingColour);
     } else {
       if (notes[index].slice(notes[index].length - 2, notes[index].length - 1) === '#') {
         noteButtons[index].noteButton.style('background-color', '#000000');
@@ -200,7 +195,12 @@ function checkPlayingNotes() {
 }
 
 function handleKeyboardKeyPress(index) {
-  polysynth.play(notes[index], 0.2, 0, 1);
+  polySynth.play(notes[index], defaultAmp, 0, 1);
   noteButtons[index].isPlaying = true;
-  noteButtons[index].noteButton.style('background-color', '#4CAF50');
+  noteButtons[index].noteButton.style('background-color', playingColour);
+}
+
+function onSoundLoop(timeFromNow) {
+  let noteIndex = Math.floor(Math.random() * chord.length);
+  polySynth.play(chord[noteIndex], 0.5, timeFromNow);
 }
