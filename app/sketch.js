@@ -30,10 +30,12 @@ function createSliderDiv(slider) {
 
 function setupTempoSlider() {
   tempoSlider = createSlider(1, 200, 20);
-  let d1 = createSliderDiv(tempoSlider);
-  d1.position(460,440);
-  let label = createDiv("Tempo");
-  label.position(502, 365);
+  let sliderDiv = createSliderDiv(tempoSlider);
+  sliderDiv.position(460,420);
+  let slowerLabel = createDiv("Slower");
+  slowerLabel.position(502, 345);  
+  let fasterLabel = createDiv("Faster");
+  fasterLabel.position(505, 500);
 }
 
 function setupInstructions() {
@@ -78,7 +80,7 @@ function setup() {
   setupKeyButtons();
   polySynth = new p5.PolySynth();
   reverb = new p5.Reverb();
-  reverb.process(polySynth, 3, 2);
+  reverb.process(polySynth, 3, 2, true);
   soundLoop = new p5.SoundLoop(onSoundLoop, defaultTempo);
 }
 
@@ -196,5 +198,5 @@ function onSoundLoop(timeFromNow) {
   const intervalInSeconds = tempoSlider.value() / 100;
   soundLoop.interval = intervalInSeconds;
   let noteIndex = Math.floor(Math.random() * chord.length);
-  polySynth.play(chord[noteIndex], 0, timeFromNow, 0.1*intervalInSeconds*10);
+  polySynth.play(chord[noteIndex], 0, timeFromNow);
 }
