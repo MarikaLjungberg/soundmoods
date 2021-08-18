@@ -3,6 +3,7 @@ const numOfBuckets = 256;
 const defaultAmp = 0.005;
 const defaultTempo = 0.2;
 const playingColour = '#84d99e'; // #4CAF50
+const defaultBorderColour = '#757575';
 const notes = ['C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A5', 'A#5', 'B5', 'C5'];
 const noteFreqs = [261.63, 277.18, 293.66, 311.13, 329.63, 349.23, 369.99, 392.00, 415.30, 440.00, 466.16, 493.88, 523.25]; 
 let noteButtons = [];
@@ -31,6 +32,8 @@ function setupTempoSlider() {
   tempoSlider = createSlider(1, 200, 20);
   let d1 = createSliderDiv(tempoSlider);
   d1.position(460,440);
+  let label = createDiv("Tempo");
+  label.position(502, 365);
 }
 
 function setupInstructions() {
@@ -111,6 +114,9 @@ function toggleOscillatorNote(note, index) {
   if (chord.includes(note)) {
     noteButtons[index].noteButton.style('border-color', playingColour);
     noteButtons[index].noteButton.style('border-width', '3px');
+  } else {
+    noteButtons[index].noteButton.style('border-color', defaultBorderColour);
+    noteButtons[index].noteButton.style('border-width', '2px');
   }
   
   if (chord.length > 0) {
@@ -181,7 +187,7 @@ function checkPlayingNotes() {
 }
 
 function handleKeyboardKeyPress(index) {
-  polySynth.play(notes[index], defaultAmp*50, 0, 1);
+  polySynth.play(notes[index], defaultAmp*15, 0, 1);
   noteButtons[index].isPlaying = true;
   noteButtons[index].noteButton.style('background-color', playingColour);
 }
