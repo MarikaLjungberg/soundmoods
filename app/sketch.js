@@ -29,7 +29,7 @@ function createSliderDiv(slider) {
 }
 
 function setupTempoSlider() {
-  tempoSlider = createSlider(1, 200, 20);
+  tempoSlider = createSlider(1, 400, 20);
   let sliderDiv = createSliderDiv(tempoSlider);
   sliderDiv.position(460,420);
   let slowerLabel = createDiv("Slower");
@@ -45,6 +45,11 @@ function setupInstructions() {
   textDiv.style('width', '130px');
   textDiv.style('height', '170px');
   textDiv.position(455, 5);
+  const disclaimer = "Note: It takes a second or two before a new tempo settles.";
+  let disclaimerDiv = createDiv(disclaimer);
+  disclaimerDiv.style('width', '130px');
+  disclaimerDiv.style('height', '170px');
+  disclaimerDiv.position(455, 245);
 }
 
 function setupKeyButtons() {
@@ -99,6 +104,7 @@ function draw() {
 
   checkPlayingNotes();
 }
+
 
 function toggleOscillatorNote(note, index) {
   if (noteButtons[index].isPlaying) {
@@ -198,5 +204,8 @@ function onSoundLoop(timeFromNow) {
   const intervalInSeconds = tempoSlider.value() / 100;
   soundLoop.interval = intervalInSeconds;
   let noteIndex = Math.floor(Math.random() * chord.length);
-  polySynth.play(chord[noteIndex], 0, timeFromNow);
+  let noteLength = Math.random() * intervalInSeconds;
+  polySynth.setADSR(0.1, 0.5, 0.5, noteLength);
+  let randomNoteDelay = Math.random() * 10 * timeFromNow;
+  polySynth.play(chord[noteIndex], 0, randomNoteDelay);
 }
