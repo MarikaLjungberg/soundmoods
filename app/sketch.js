@@ -107,7 +107,7 @@ function draw() {
 
 
 function toggleOscillatorNote(note, index) {
-  if (noteButtons[index].isPlaying) {
+  if (chord.includes(note)) {
     waves[index].amp(0);
     noteButtons[index].isPlaying = false;
     chord.splice(chord.indexOf(note), 1);
