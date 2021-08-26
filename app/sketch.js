@@ -1,9 +1,10 @@
-let fft, polySynth, soundLoop, loopIntervalInSeconds, tempoSlider, tonality, mood, moodInfoDiv, moodGifText, gifInfoDiv, gifDiv, happyGif, sadGif, calmGif, anxiousGif;
+let fft, polySynth, soundLoop, loopIntervalInSeconds, tempoSlider, confirmTempoButton, tonality, mood, moodInfoDiv, moodGifText, gifInfoDiv, gifDiv, happyGif, sadGif, calmGif, anxiousGif;
 const numOfBuckets = 256;
 const defaultAmp = 0.005;
 const defaultTempo = 0.2;
 const playingColour = '#84d99e'; // #4CAF50
 const defaultBorderColour = '#757575';
+let tempoConfirmed = false;
 const notes = ['C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A5', 'A#5', 'B5', 'C5'];
 const noteFreqs = [261.63, 277.18, 293.66, 311.13, 329.63, 349.23, 369.99, 392.00, 415.30, 440.00, 466.16, 493.88, 523.25]; 
 let noteButtons = [];
@@ -36,6 +37,23 @@ function setupTempoSlider() {
   slowerLabel.position(502, 345);  
   let fasterLabel = createDiv("Faster");
   fasterLabel.position(505, 500);
+  confirmTempoButton = createButton('Confirm chosen tempo');
+  confirmTempoButton.mousePressed(toggleChooseTempo);
+  confirmTempoButton.position(505, 530);
+}
+
+function toggleChooseTempo() {
+  if (!tempoConfirmed) {
+    confirmTempoButton.style('background-color', playingColour);
+    confirmTempoButton.html('Change tempo');
+    tempoConfirmed = true;
+    tempoSlider.attribute('disabled', '');
+  } else {
+    confirmTempoButton.style('background-color', '#f2f2f2');
+    confirmTempoButton.html('Confirm chosen tempo');
+    tempoConfirmed = false;
+    tempoSlider.removeAttribute('disabled');
+  }
 }
 
 function setupInstructions() {
@@ -77,6 +95,10 @@ function setupKeyButtons() {
 
 
 function setup() {
+  calmGif = loadImage('./calmDog.gif');
+  happyGif = loadImage('./happyDog.gif');
+  sadGif = loadImage('./sadDog.gif');
+  anxiousGif = loadImage('./anxiousGif.gif');
   createCanvas(450, 400);
   setupInstructions();
   setupWaves();
@@ -104,10 +126,18 @@ function draw() {
 
   checkPlayingNotes();
 
-  calculateTonality();
-  calculateMood();
-  displayMood();
-  showGif();
+  if (tempoConfirmed) {
+    calculateTonality();
+    calculateMood();
+    displayMood();
+    showGif();
+  } else {
+    if (moodInfoDiv && gifInfoDiv && gifDiv) {
+      moodInfoDiv.remove();
+      gifInfoDiv.remove();
+      gifDiv.remove();
+    }
+  }
 }
 
 
@@ -258,7 +288,7 @@ function calculateMood() {
     moodGifText = "Here's a little something to console you ...";
   } else if (tonality === "minor" && tempo < 50) {
     mood = "anxious";
-    moodGifText = "That's all right. I'm sure it'll be fine.";
+    moodGifText = "That's all right. It happens sometimes.";
   } else if (tonality === undefined) {
     mood = undefined;
   }
@@ -299,6 +329,20 @@ function showGif() {
     img.position(220, 140);
   }
 
+  /*
+   if (!mood && !!gifDiv) {
+    gifDiv.remove();
+  } else if (mood === "calm") {
+    background(calmGif);
+  } else if (mood === "happy") {
+    background(happyGif);
+  } else if (mood === "sad") {
+    background(sadGif);
+  } else if (mood === "anxious") {
+    background(anxiousGif);
+  }
+  */
+
   if (!mood && !!gifDiv) {
     gifDiv.remove();
   } else if (mood === "calm") {
@@ -317,4 +361,5 @@ function showGif() {
     gifDiv = createImg('./anxiousGif.gif', 'A cuddly dog');
     styleGif(gifDiv);
   }
+  
 }
