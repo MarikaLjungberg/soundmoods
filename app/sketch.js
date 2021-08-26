@@ -1,4 +1,4 @@
-let fft, polySynth, soundLoop, loopIntervalInSeconds, tempoSlider;
+let fft, polySynth, soundLoop, loopIntervalInSeconds, tempoSlider, tonality, mood, moodInfoDiv, moodGifText, gifInfoDiv, gifDiv, happyGif, sadGif, calmGif, anxiousGif;
 const numOfBuckets = 256;
 const defaultAmp = 0.005;
 const defaultTempo = 0.2;
@@ -103,6 +103,11 @@ function draw() {
   endShape();
 
   checkPlayingNotes();
+
+  calculateTonality();
+  calculateMood();
+  displayMood();
+  showGif();
 }
 
 
@@ -206,6 +211,110 @@ function onSoundLoop(timeFromNow) {
   let noteIndex = Math.floor(Math.random() * chord.length);
   let noteLength = Math.random() * intervalInSeconds;
   polySynth.setADSR(0.1, 0.5, 0.5, noteLength);
-  let randomNoteDelay = Math.random() * 10 * timeFromNow;
-  polySynth.play(chord[noteIndex], 0, randomNoteDelay);
+  //let randomNoteDelay = Math.random() * 10 * timeFromNow;
+  //polySynth.play(chord[noteIndex], 0, randomNoteDelay);
+  polySynth.play(chord[noteIndex], 0, timeFromNow);
+}
+
+function calculateTonality() {
+  const majorRatios = [1.2599, 1.1892];
+  const minorRatios = [1.1892, 1.2599];
+
+  if (chord.length > 1) {
+    const freqsInChord = chord.map((note) => {
+      const noteIndex = notes.indexOf(note);
+      return noteFreqs[noteIndex];
+    });
+  
+    const ratios = freqsInChord.map((freq, index) => {
+      if (index > 0) {
+        return freq/freqsInChord[index-1]
+      } else {
+        return 1;
+      }
+    });
+  
+    const firstTersRatio = parseFloat(ratios[1].toFixed(4));
+    if (firstTersRatio === parseFloat(1.2599)) {
+      tonality = "major";
+    } else if (firstTersRatio === parseFloat(1.1892)) {
+      tonality = "minor";
+    } else {
+      tonality = undefined;
+    }
+  }
+}
+
+function calculateMood() {
+  let tempo = tempoSlider.value()-100;
+  if (tonality === "major" && tempo > 50) {
+    mood = "calm";
+    moodGifText = "Here's your buddy!";
+  } else if (tonality === "major" && tempo < 50) {
+    mood = "happy";
+    moodGifText = "Just like this guy here!";
+  } else if (tonality === "minor" && tempo > 50) {
+    mood = "sad";
+    moodGifText = "Here's a little something to console you ...";
+  } else if (tonality === "minor" && tempo < 50) {
+    mood = "anxious";
+    moodGifText = "That's all right. I'm sure it'll be fine.";
+  } else if (tonality === undefined) {
+    mood = undefined;
+  }
+}
+
+function displayMood() {
+  if (!!moodInfoDiv && !!gifInfoDiv) {
+    moodInfoDiv.remove();
+    gifInfoDiv.remove();
+    gifDiv.remove();
+  }
+  let moodText = !mood ? "" : "You seem " + mood;
+  moodInfoDiv = createDiv(moodText);
+  moodInfoDiv = setGeneralMoodInfoStyle(moodInfoDiv);
+  moodInfoDiv.style('color', '#d4f3ff');
+  if (moodText !== "") {
+    gifInfoDiv = createDiv(moodGifText);
+    gifInfoDiv = setGeneralMoodInfoStyle(gifInfoDiv);
+    gifInfoDiv.style('color', '#d4f3ff');
+    gifInfoDiv.style('font-size', '15px');
+    gifInfoDiv.style('padding-top', '20px');
+    gifInfoDiv.position(200, 60);
+  }
+}
+
+function setGeneralMoodInfoStyle(moodInfoDiv) {
+  moodInfoDiv.style('font-family', 'Arial');
+  moodInfoDiv.style('font-size', '20px');
+  moodInfoDiv.style('width', '250px');
+  moodInfoDiv.style('height', '170px');
+  moodInfoDiv.position(200, 30);
+  return moodInfoDiv;
+}
+
+function showGif() {
+  const styleGif = (img) => {
+    img.style('width', '200px');
+    img.position(220, 140);
+  }
+
+  if (!mood && !!gifDiv) {
+    gifDiv.remove();
+  } else if (mood === "calm") {
+    gifDiv = createImg('./calmDog.gif', 'A cuddly dog');
+    styleGif(gifDiv);
+    gifDiv.style('height', '165px');
+  } else if (mood === "happy") {
+    gifDiv = createImg('./happyDog.gif', 'A cuddly dog');
+    styleGif(gifDiv);
+    gifDiv.style('height', '160px');
+  } else if (mood === "sad") {
+    gifDiv = createImg('./sadDog.gif', 'A cuddly dog');
+    styleGif(gifDiv);
+    gifDiv.style('height', '130px');
+  } else if (mood === "anxious") {
+    gifDiv = createImg('./anxiousGif.gif', 'A cuddly dog');
+    styleGif(gifDiv);
+  }
 }
