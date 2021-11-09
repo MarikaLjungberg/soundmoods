@@ -1,4 +1,4 @@
-let fft, polySynth, soundLoop, loopIntervalInSeconds, tempoSlider, confirmTempoButton, tonality, mood, moodInfoDiv, moodGifText, gifInfoDiv, gifDiv, happyGif, sadGif, calmGif, anxiousGif;
+let fft, polySynth, reverb, soundLoop, loopIntervalInSeconds, tempoSlider, confirmTempoButton, tonality, mood, moodInfoDiv, moodGifText, gifInfoDiv, gifDiv, happyGif, sadGif, calmGif, anxiousGif;
 const numOfBuckets = 256;
 const defaultAmp = 0.005;
 const defaultTempo = 0.2;
@@ -93,6 +93,15 @@ function setupKeyButtons() {
   });
 }
 
+function stopChord() {
+  chord = [];
+  soundLoop.stop();
+  reverb.disconnect();
+  waves.forEach((wave) => {
+    wave.amp(0);
+  });
+}
+
 
 function setup() {
   calmGif = loadImage('./calmDog.gif');
@@ -109,6 +118,10 @@ function setup() {
   reverb = new p5.Reverb();
   reverb.process(polySynth, 3, 2, true);
   soundLoop = new p5.SoundLoop(onSoundLoop, defaultTempo);
+
+  stopButton = createButton('Stop');
+  stopButton.mousePressed(stopChord);
+  stopButton.position(505, 555);
 }
 
 function draw() {
@@ -138,6 +151,8 @@ function draw() {
       gifDiv.remove();
     }
   }
+
+  console.log(chord);
 }
 
 
