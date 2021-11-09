@@ -1,4 +1,4 @@
-let fft, polySynth, reverb, soundLoop, loopIntervalInSeconds, tempoSlider, confirmTempoButton, tonality, mood, moodInfoDiv, moodGifText, gifInfoDiv, gifDiv, happyGif, sadGif, calmGif, anxiousGif;
+let img, fft, polySynth, reverb, soundLoop, loopIntervalInSeconds, tempoSlider, confirmTempoButton, tonality, mood, moodInfoDiv, moodGifText, gifInfoDiv, gifDiv, happyGif, sadGif, calmGif, anxiousGif;
 const numOfBuckets = 256;
 const defaultAmp = 0.005;
 const defaultTempo = 0.2;
@@ -11,7 +11,7 @@ let noteButtons = [];
 let waves = [];
 let chord = [];
 let canvasOffsetX = 300;
-let canvasOffsetY = 100;
+let canvasOffsetY = 120;
 
 function setupWaves() {
   noteFreqs.forEach((freq, index) => {
@@ -138,6 +138,14 @@ function setupArticle() {
   articleDiv.position(canvasOffsetX + 655, canvasOffsetY);
 }
 
+function preload() {
+  img = loadImage('./Music_moods.png');
+}
+
+function setupHeader() {
+  let headerDiv = createImg('./Music_moods.png');
+  headerDiv.position(canvasOffsetX - 150, 20);
+}
 
 function setup() {
   calmGif = loadImage('./calmDog.gif');
@@ -147,6 +155,7 @@ function setup() {
   let cnv = createCanvas(450, 400);
   cnv.position(canvasOffsetX, canvasOffsetY);
   cnv.style('border-radius', '5px');
+  setupHeader();
   setupInstructions();
   setupWaves();
   setupTempoSlider();
@@ -191,8 +200,6 @@ function draw() {
       gifDiv.remove();
     }
   }
-
-  console.log(chord);
 }
 
 
