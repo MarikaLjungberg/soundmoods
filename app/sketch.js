@@ -10,6 +10,8 @@ const noteFreqs = [261.63, 277.18, 293.66, 311.13, 329.63, 349.23, 369.99, 392.0
 let noteButtons = [];
 let waves = [];
 let chord = [];
+let canvasOffsetX = 300;
+let canvasOffsetY = 100;
 
 function setupWaves() {
   noteFreqs.forEach((freq, index) => {
@@ -32,14 +34,14 @@ function createSliderDiv(slider) {
 function setupTempoSlider() {
   tempoSlider = createSlider(1, 400, 20);
   let sliderDiv = createSliderDiv(tempoSlider);
-  sliderDiv.position(460,420);
+  sliderDiv.position(canvasOffsetX + 440, canvasOffsetY + 420);
   let slowerLabel = createDiv("Slower");
-  slowerLabel.position(502, 345);  
+  slowerLabel.position(canvasOffsetX + 482, canvasOffsetY + 345);  
   let fasterLabel = createDiv("Faster");
-  fasterLabel.position(505, 500);
+  fasterLabel.position(canvasOffsetX + 485, canvasOffsetY + 500);
   confirmTempoButton = createButton('Confirm chosen tempo');
   confirmTempoButton.mousePressed(toggleChooseTempo);
-  confirmTempoButton.position(505, 530);
+  confirmTempoButton.position(canvasOffsetX + 455, canvasOffsetY + 530);
 }
 
 function toggleChooseTempo() {
@@ -62,12 +64,12 @@ function setupInstructions() {
   let textDiv = createDiv(instructions);
   textDiv.style('width', '130px');
   textDiv.style('height', '170px');
-  textDiv.position(455, 5);
+  textDiv.position(canvasOffsetX + 455, canvasOffsetY + 5);
   const disclaimer = "Note: It takes a second or two before a new tempo settles.";
   let disclaimerDiv = createDiv(disclaimer);
   disclaimerDiv.style('width', '130px');
   disclaimerDiv.style('height', '170px');
-  disclaimerDiv.position(455, 245);
+  disclaimerDiv.position(canvasOffsetX + 455, canvasOffsetY + 245);
 }
 
 function setupKeyButtons() {
@@ -81,9 +83,9 @@ function setupKeyButtons() {
     if (note.slice(note.length - 2, note.length - 1) === '#') {
       noteButton.style('background-color', '#000000');
       noteButton.style('color', '#ffffff');
-      buttonDiv.position(index*35,405);
+      buttonDiv.position(canvasOffsetX + index*35, canvasOffsetY + 405);
     } else {
-      buttonDiv.position(index*35,445);
+      buttonDiv.position(canvasOffsetX + index*35, canvasOffsetY + 445);
     }
     noteButton.mousePressed(() => toggleOscillatorNote(note, index));
     noteButtons[index] = {
@@ -102,13 +104,28 @@ function stopChord() {
   });
 }
 
+function setupArticle() {
+  let article = getArticle();
+  let articleDiv = createDiv(article);
+  articleDiv.style('width', '130px');
+  articleDiv.style('height', '170px');
+  articleDiv.style('background-color', '#BBCCD2');
+  articleDiv.style('color', 'black');
+  articleDiv.style('padding', '20px');
+  articleDiv.style('font-family', 'Arial, Helvetica, sans-serif');
+  articleDiv.style('border-radius', '5px');
+  articleDiv.position(canvasOffsetX + 655, canvasOffsetY + 5);
+}
+
 
 function setup() {
   calmGif = loadImage('./calmDog.gif');
   happyGif = loadImage('./happyDog.gif');
   sadGif = loadImage('./sadDog.gif');
   anxiousGif = loadImage('./anxiousGif.gif');
-  createCanvas(450, 400);
+  let cnv = createCanvas(450, 400);
+  cnv.position(canvasOffsetX, canvasOffsetY);
+  cnv.style('border-radius', '5px');
   setupInstructions();
   setupWaves();
   setupTempoSlider();
@@ -121,7 +138,9 @@ function setup() {
 
   stopButton = createButton('Stop');
   stopButton.mousePressed(stopChord);
-  stopButton.position(505, 555);
+  stopButton.position(canvasOffsetX + 455, canvasOffsetY + 555);
+
+  setupArticle();
 }
 
 function draw() {
@@ -325,7 +344,7 @@ function displayMood() {
     gifInfoDiv.style('color', '#d4f3ff');
     gifInfoDiv.style('font-size', '15px');
     gifInfoDiv.style('padding-top', '20px');
-    gifInfoDiv.position(200, 60);
+    gifInfoDiv.position(canvasOffsetX + 200, canvasOffsetY + 60);
   }
 }
 
@@ -334,14 +353,14 @@ function setGeneralMoodInfoStyle(moodInfoDiv) {
   moodInfoDiv.style('font-size', '20px');
   moodInfoDiv.style('width', '250px');
   moodInfoDiv.style('height', '170px');
-  moodInfoDiv.position(200, 30);
+  moodInfoDiv.position(canvasOffsetX + 200, canvasOffsetY + 30);
   return moodInfoDiv;
 }
 
 function showGif() {
   const styleGif = (img) => {
     img.style('width', '200px');
-    img.position(220, 140);
+    img.position(canvasOffsetX + 220, canvasOffsetY + 140);
   }
 
   /*
@@ -376,5 +395,9 @@ function showGif() {
     gifDiv = createImg('./anxiousGif.gif', 'A cuddly dog');
     styleGif(gifDiv);
   }
-  
+}
+
+function getArticle() {
+  let article = "What the hell is going on!";
+  return article; 
 }
