@@ -1,4 +1,4 @@
-let img, fft, polySynth, reverb, soundLoop, loopIntervalInSeconds, tempoSlider, confirmTempoButton, tonality, mood, moodInfoDiv, moodGifText, gifInfoDiv, gifDiv, happyGif, sadGif, calmGif, anxiousGif;
+let img, fft, polySynth, reverb, soundLoop, loopIntervalInSeconds, tempoSlider, confirmTempoButton, tonality, mood, moodInfoDiv, moodGifText, gifInfoDiv, gifDiv, happyGif, sadGif, calmGif, anxiousDog;
 const numOfBuckets = 256;
 const defaultAmp = 0.005;
 const defaultTempo = 0.2;
@@ -10,7 +10,7 @@ const noteFreqs = [261.63, 277.18, 293.66, 311.13, 329.63, 349.23, 369.99, 392.0
 let noteButtons = [];
 let waves = [];
 let chord = [];
-let canvasOffsetX = 300;
+let canvasOffsetX = 200;
 let canvasOffsetY = 120;
 
 function setupWaves() {
@@ -34,11 +34,11 @@ function createSliderDiv(slider) {
 function setupTempoSlider() {
   tempoSlider = createSlider(1, 400, 20);
   let sliderDiv = createSliderDiv(tempoSlider);
-  sliderDiv.position(canvasOffsetX + 440, canvasOffsetY + 420);
+  sliderDiv.position(canvasOffsetX + 440, canvasOffsetY + 433);
   let slowerLabel = createDiv("Slower");
-  slowerLabel.position(canvasOffsetX + 482, canvasOffsetY + 345);  
+  slowerLabel.position(canvasOffsetX + 482, canvasOffsetY + 363);  
   let fasterLabel = createDiv("Faster");
-  fasterLabel.position(canvasOffsetX + 485, canvasOffsetY + 500);
+  fasterLabel.position(canvasOffsetX + 485, canvasOffsetY + 508);
   confirmTempoButton = createButton('Confirm chosen tempo');
   confirmTempoButton.mousePressed(toggleChooseTempo);
   confirmTempoButton.position(canvasOffsetX + 455, canvasOffsetY + 530);
@@ -59,11 +59,11 @@ function toggleChooseTempo() {
 }
 
 function setupInstructions() {
-  const instructions = "Use keyboard keys z,s,x,d,c,v,g,b,h,n,j,m and , to play around on the keyboard to find a chord that reflects your mood right now." +
-  "When you've found it, press the keys on the screen and choose a tempo to start the analysis.";
+  const instructions = "<b>Instructions:</b> Use keyboard keys z,s,x,d,c,v,g,b,h,n,j,m and , to play around on the keyboard to find a chord that reflects your mood right now. " +
+  "When you've found it, press the keys on the screen and choose a tempo to start the classification.";
   let textDiv = createDiv(instructions);
   textDiv.style('width', '130px');
-  textDiv.style('height', '210px');
+  textDiv.style('height', '245px');
   textDiv.style('background-color', '#E8EEF0');  
   textDiv.style('padding', '10px');
   textDiv.style('border-radius', '5px');
@@ -76,12 +76,12 @@ function setupInstructions() {
   noteDiv.style('background-color', '#E8EEF0');  
   noteDiv.style('padding', '10px');
   noteDiv.style('border-radius', '5px');
-  noteDiv.position(canvasOffsetX + 455, canvasOffsetY + 245);
+  noteDiv.position(canvasOffsetX + 455, canvasOffsetY + 270);
 
-  const disclaimer = "<b>Disclaimer!</b> At the moment the mood analysis only works for major and minor chords played with tonic, third and fifth played in that order.";
+  const disclaimer = "<b>Disclaimer!</b> At the moment the mood classification only works for major and minor chords played with tonic first directly followed by the third. <br><br> <i>The current version of the classification is a very simple application of the guidelines presented by Michael Nuzzolo's Music Mood Classification found here: https://sites.tufts.edu/eeseniordesignhandbook/2015/music-mood-classification/</i>";
   let disclaimerDiv = createDiv(disclaimer);
   disclaimerDiv.style('width', '400px');
-  disclaimerDiv.style('height', '55px');
+  disclaimerDiv.style('height', '155px');
   disclaimerDiv.style('background-color', '#E8EEF0');  
   disclaimerDiv.style('padding', '10px');
   disclaimerDiv.style('border-radius', '5px');
@@ -127,19 +127,15 @@ function setupArticle() {
   let article = getArticle();
   let articleDiv = createDiv(article);
   //let articleWidth = windowWidth - canvasOffsetX + "px";
-  articleDiv.style('width', '600px');
+  articleDiv.style('width', '700px');
   articleDiv.style('height', '750px');
   articleDiv.style('background-color', '#BBCCD2');
   articleDiv.style('color', 'black');
   articleDiv.style('padding', '20px');
-  articleDiv.style('padding-top', '0px');
+  articleDiv.style('padding-top', '10px');
   articleDiv.style('font-family', 'Arial, Helvetica, sans-serif');
   articleDiv.style('border-radius', '5px');
   articleDiv.position(canvasOffsetX + 655, canvasOffsetY);
-}
-
-function preload() {
-  img = loadImage('./Music_moods.png');
 }
 
 function setupHeader() {
@@ -151,7 +147,7 @@ function setup() {
   calmGif = loadImage('./calmDog.gif');
   happyGif = loadImage('./happyDog.gif');
   sadGif = loadImage('./sadDog.gif');
-  anxiousGif = loadImage('./anxiousGif.gif');
+  anxiousDog = loadImage('./anxiousDog.gif');
   let cnv = createCanvas(450, 400);
   cnv.position(canvasOffsetX, canvasOffsetY);
   cnv.style('border-radius', '5px');
@@ -401,7 +397,7 @@ function showGif() {
   } else if (mood === "sad") {
     background(sadGif);
   } else if (mood === "anxious") {
-    background(anxiousGif);
+    background(anxiousDog);
   }
   */
 
@@ -420,28 +416,30 @@ function showGif() {
     styleGif(gifDiv);
     gifDiv.style('height', '130px');
   } else if (mood === "anxious") {
-    gifDiv = createImg('./anxiousGif.gif', 'A cuddly dog');
+    gifDiv = createImg('./anxiousDog.gif', 'A cuddly dog');
     styleGif(gifDiv);
   }
 }
 
 function getArticle() {
-  let article = `<h4>Background</h4>
-  How come music maps so well to our inner /emotional /experiences/landscapes? How come rhythms and melodies both mimic and trigger sways and fits in our internal lives? The infinitesimal nuances in emotion can be reproduced to near perfection in music - and vice versa. They are eerily interchangeable. 
-  <br>
-  <br>
-  Sound and hearing are mechanical matters. For the matter at hand, the details are unimportant, but the mechanism goes something like this: From a flute or a string or someone’s vocal organ, air density variations slam into our eardrums, causing ripples that fiddle around with some in-ear hair cells and are thus converted into neurological signals, set on a journey toward the brain along the auditory nerve. So far, music exists only in one place: the mind of the player. But in the fraction of a second, music arises in a second place - in the listener. The once mere vibrations and neural charge fluctuations are awoken into spirited life by the auditory cortex and limbic system(?).  
-  /the auditory cortex and libic system of the listener awaking into spirited life these mere vibrations and neural charge distributions./
-  <br>
-  <br>
-  What only the most empathetic of people can accomplish through words - asymptotical by nature - music can mediate in an instant. 
-  <br>
-  <br>
-  Is the answer to the question that we humans use sounds to convey emotion? Is it so simple? Is music just a shortcut past language. It maps so well because we made the mapping. We’ve found this resource - sounds - and we discovered we can mold it into useful and precise things.
-  So how come it’s sound that maps so well to emotion? Why not visual cues? Is it the temporal unfolding of it that mimics how emotions unfold? But it is also the layering, the harmonies, or just one note in relation to others - that too, the innate relational aspects of music. But why is it that just one note can stir intense longing and nostalgia, hope and grit, in a way that one colour never could?
-  <br>
-  <br>
-  Of course, one could argue that music conveys emotions because we use it for that exact purpose; it is simply a tool. But why auditory stimulus specifically and not, say, visual stimulus? Soundwaves are temporally dependent whereas visual art is not - is this a clue to why it is music, and not visual art, that is the closest thing we have to direct emotional transfer?
+  let article = `How come music maps so well to our inner landscapes? How come rhythms and melodies - mere vibrations in air - can both mimic and trigger surges in our internal lives, even more so than spoken or written language? What only the most empathetic of people can accomplish through words, music can mediate in an instant. The infinitesimal nuances in emotion can be reproduced to near perfection in music - and vice versa. They are eerily interchangeable.
+<br>
+<br>
+Sound and hearing are mechanical matters. From a flute or a string or someone’s vocal organ, air density variations slam into our eardrums, causing ripples that jiggle some in-ear hair cells. So far, music exists only in one place: the mind of the player. But in the fraction of a second, as the neurological signals triggered by these hairs reach the brain, music arises also in the listener. The auditory cortex, limbic system and prefrontal cortex of the listener have awoken the mere vibrations and neural charge distributions into spirited life.
+<br>
+<br>
+Of course, one could argue that music conveys emotion simply because we use it for that exact purpose; it is merely a tool. It maps so well because we made the mapping. (Possibly contradicting this is the fact that people spontaneously sing or use music-like speech to catch the attention of infants*). But why auditory stimulus specifically and not, say, visual? Why is it that just one note can stir intense longing and nostalgia, hope or grit, in a way that one colour never could? Soundwaves are temporally dependent whereas visual art is usually not - is this a clue as to why it is music that is the closest thing we have to direct emotional transfer (albeit we all have our personal interpretations and associations)? Does the temporal unfolding of music mimic some nature of our emotional processes? One common aspect of this is the tendency of unexpected events in music to elicit strong emotion**.
+<br>
+<br>
+But more than that, it is the layering, the harmonies, or just one note in relation to others. We all know, instinctively, when a certain musical chord or interval is ‘sad’ or ‘happy’. The innate relational aspects of music must somehow, it seems, directly reflect some intrinsic aspect of emotional mechanisms. The explanation that it is a learned response feels hardly convincing, though it is true that large portions of our modern lives include music, and memories of certain periods can often be catalogued by the songs that accompanied them. Professor of psychology Patrik N. Juslin suggested a complex framework for the underlying mechanisms of emotional induction by music, involving six different mechanisms. These reach from brain stem reflexes to the recollection of memories and actual subjective evaluation of the quality of the music, requiring vast and various areas of the brain. 
+<br>
+<br>
+And maybe this is one explanation to why music is so tightly coupled to our inner lives: it affects them on all levels, engaging many of the systems involved in producing our experiences of our consious selves. It activates memories we already have and alters the ones we are currently making. Like an intricate set-up of dominoes, the impression of one single note will ripple through the brain and activate conscious and subconscious processes alike. We can explore this with modern brain imaging technology and we might be able to answer <i>how</i> music does it, but to me, it still seems unclear whether we will ever find a way to assess why <i>music</i> does it.
+<br>
+<br>
+<br>
+*e.g. Nakata & Trehub, 2004 and Fernald et al., 1989 <br>
+**Arjmand et al., 2017
   `;
   return article; 
 }
