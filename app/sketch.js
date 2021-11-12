@@ -41,7 +41,7 @@ function setupTempoSlider() {
   fasterLabel.position(canvasOffsetX + 485, canvasOffsetY + 508);
   confirmTempoButton = createButton('Confirm chosen tempo');
   confirmTempoButton.mousePressed(toggleChooseTempo);
-  confirmTempoButton.position(canvasOffsetX + 455, canvasOffsetY + 530);
+  confirmTempoButton.position(canvasOffsetX + 455, canvasOffsetY + 535);
 }
 
 function toggleChooseTempo() {
@@ -69,10 +69,10 @@ function setupInstructions() {
   textDiv.style('border-radius', '5px');
   textDiv.position(canvasOffsetX + 455, canvasOffsetY);
 
-  const note = "Note: It takes a second or two before a new tempo settles.";
+  const note = "Note: It takes a second or two for a new tempo to settle.";
   let noteDiv = createDiv(note);
   noteDiv.style('width', '130px');
-  noteDiv.style('height', '70px');
+  noteDiv.style('height', '60px');
   noteDiv.style('background-color', '#E8EEF0');  
   noteDiv.style('padding', '10px');
   noteDiv.style('border-radius', '5px');
@@ -164,7 +164,7 @@ function setup() {
 
   stopButton = createButton('Stop');
   stopButton.mousePressed(stopChord);
-  stopButton.position(canvasOffsetX + 455, canvasOffsetY + 560);
+  stopButton.position(canvasOffsetX + 455, canvasOffsetY + 565);
 
   setupArticle();
 }
@@ -434,7 +434,7 @@ Of course, one could argue that music conveys emotion simply because we use it f
 But more than that, it is the layering, the harmonies, or just one note in relation to others. We all know, instinctively, when a certain musical chord or interval is ‘sad’ or ‘happy’. The innate relational aspects of music must somehow, it seems, directly reflect some intrinsic aspect of emotional mechanisms. The explanation that it is a learned response feels hardly convincing, though it is true that large portions of our modern lives include music, and memories of certain periods can often be catalogued by the songs that accompanied them. Professor of psychology Patrik N. Juslin suggested a complex framework for the underlying mechanisms of emotional induction by music, involving six different mechanisms. These range from brain stem reflexes to the recollection of memories and actual subjective evaluation of the quality of the music, requiring vast and various areas of the brain. 
 <br>
 <br>
-And maybe this is one explanation to why music is so tightly coupled to our inner lives: it affects them on all levels, engaging many of the systems involved in producing our experiences of our consious selves. It activates memories we already have and alters the ones we are currently making. Like an intricate set-up of dominoes, the impression of one single note will ripple through the brain and activate conscious and subconscious processes alike. We can explore this with modern brain imaging technology and we might be able to answer <i>how</i> music does it, but to me, it still seems unclear whether we will ever find a way to assess why <i>music</i> does it.
+And maybe this is one explanation to why music is so tightly coupled to our inner lives: it affects them on all levels, engaging many of the systems involved in producing our experiences of our conscious selves. It activates memories we already have and alters the ones we are currently making. Like an intricate set-up of dominoes, the impression of one single note will ripple through the brain and activate conscious and subconscious processes alike. We can explore this with modern brain imaging technology and we might be able to answer <i>how</i> music does it, but to me, it still seems unclear whether we will ever find a way to assess why <i>music</i> does it.
 <br>
 <br>
 <br>
