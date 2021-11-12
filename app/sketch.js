@@ -438,8 +438,8 @@ And maybe this is one explanation to why music is so tightly coupled to our inne
 <br>
 <br>
 <br>
-*e.g. Nakata & Trehub, 2004 and Fernald et al., 1989 <br>
-**Arjmand et al., 2017
+<i>*e.g. Nakata & Trehub, 2004 and Fernald et al., 1989</i><br>
+<i>**Arjmand et al., 2017</i>
   `;
   return article; 
 }
