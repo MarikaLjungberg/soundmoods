@@ -13,6 +13,10 @@ let chord = [];
 let canvasOffsetX = 200;
 let canvasOffsetY = 120;
 
+function positionDiv(div, x, y) {
+  div.position(canvasOffsetX + x, canvasOffsetY + y);
+}
+
 function setupWaves() {
   noteFreqs.forEach((freq, index) => {
     wave = new p5.Oscillator();
@@ -34,14 +38,14 @@ function createSliderDiv(slider) {
 function setupTempoSlider() {
   tempoSlider = createSlider(1, 400, 20);
   let sliderDiv = createSliderDiv(tempoSlider);
-  sliderDiv.position(canvasOffsetX + 440, canvasOffsetY + 433);
+  positionDiv(sliderDiv, 440, 433);
   let slowerLabel = createDiv("Slower");
-  slowerLabel.position(canvasOffsetX + 482, canvasOffsetY + 363);  
+  positionDiv(slowerLabel, 482, 363);
   let fasterLabel = createDiv("Faster");
-  fasterLabel.position(canvasOffsetX + 485, canvasOffsetY + 508);
+  positionDiv(fasterLabel, 485, 508);
   confirmTempoButton = createButton('Confirm chosen tempo');
   confirmTempoButton.mousePressed(toggleChooseTempo);
-  confirmTempoButton.position(canvasOffsetX + 455, canvasOffsetY + 535);
+  positionDiv(confirmTempoButton, 455, 535);
 }
 
 function toggleChooseTempo() {
@@ -67,7 +71,7 @@ function setupInstructions() {
   textDiv.style('background-color', '#E8EEF0');  
   textDiv.style('padding', '10px');
   textDiv.style('border-radius', '5px');
-  textDiv.position(canvasOffsetX + 455, canvasOffsetY);
+  positionDiv(textDiv, 455, 0);
 
   const note = "Note: It takes a second or two for a new tempo to settle.";
   let noteDiv = createDiv(note);
@@ -76,7 +80,7 @@ function setupInstructions() {
   noteDiv.style('background-color', '#E8EEF0');  
   noteDiv.style('padding', '10px');
   noteDiv.style('border-radius', '5px');
-  noteDiv.position(canvasOffsetX + 455, canvasOffsetY + 270);
+  positionDiv(noteDiv, 455, 270);
 
   const disclaimer = "<b>Disclaimer!</b> At the moment the mood classification only works for major and minor chords played with tonic first directly followed by the third. <br><br> <i>The current version of the classification is a very simple application of the guidelines presented by Michael Nuzzolo's Music Mood Classification found here: https://sites.tufts.edu/eeseniordesignhandbook/2015/music-mood-classification/</i>";
   let disclaimerDiv = createDiv(disclaimer);
@@ -85,7 +89,7 @@ function setupInstructions() {
   disclaimerDiv.style('background-color', '#E8EEF0');  
   disclaimerDiv.style('padding', '10px');
   disclaimerDiv.style('border-radius', '5px');
-  disclaimerDiv.position(canvasOffsetX, canvasOffsetY + 530);
+  positionDiv(disclaimerDiv, 0, 530);
 }
 
 function setupKeyButtons() {
@@ -99,9 +103,9 @@ function setupKeyButtons() {
     if (note.slice(note.length - 2, note.length - 1) === '#') {
       noteButton.style('background-color', '#000000');
       noteButton.style('color', '#ffffff');
-      buttonDiv.position(canvasOffsetX + index*35, canvasOffsetY + 405);
+      positionDiv(buttonDiv, index*35, 405);
     } else {
-      buttonDiv.position(canvasOffsetX + index*35, canvasOffsetY + 445);
+      positionDiv(buttonDiv, index*35, 445);
     }
     noteButton.mousePressed(() => toggleOscillatorNote(note, index));
     noteButtons[index] = {
@@ -120,7 +124,9 @@ function stopChord() {
   });
   mood = undefined;
   tonality = undefined;
-  toggleChooseTempo();
+  if (tempoConfirmed) {
+    toggleChooseTempo();
+  }
   tempoConfirmed = false;
 }
 
@@ -136,7 +142,7 @@ function setupArticle() {
   articleDiv.style('padding-top', '10px');
   articleDiv.style('font-family', 'Arial, Helvetica, sans-serif');
   articleDiv.style('border-radius', '5px');
-  articleDiv.position(canvasOffsetX + 655, canvasOffsetY);
+  positionDiv(articleDiv, 655, 0);
 }
 
 function setupHeader() {
@@ -165,7 +171,7 @@ function setup() {
 
   stopButton = createButton('Stop');
   stopButton.mousePressed(stopChord);
-  stopButton.position(canvasOffsetX + 455, canvasOffsetY + 565);
+  positionDiv(stopButton, 455, 565);
 
   setupArticle();
 }
@@ -369,7 +375,7 @@ function displayMood() {
     gifInfoDiv.style('color', '#d4f3ff');
     gifInfoDiv.style('font-size', '15px');
     gifInfoDiv.style('padding-top', '20px');
-    gifInfoDiv.position(canvasOffsetX + 200, canvasOffsetY + 60);
+    positionDiv(gifInfoDiv, 200, 60);
   }
 }
 
@@ -378,7 +384,7 @@ function setGeneralMoodInfoStyle(moodInfoDiv) {
   moodInfoDiv.style('font-size', '20px');
   moodInfoDiv.style('width', '250px');
   moodInfoDiv.style('height', '170px');
-  moodInfoDiv.position(canvasOffsetX + 200, canvasOffsetY + 30);
+  positionDiv(moodInfoDiv, 200, 30);
   return moodInfoDiv;
 }
 
@@ -386,21 +392,8 @@ function showGif() {
   const styleGif = (img) => {
     img.style('width', '200px');
     img.position(canvasOffsetX + 220, canvasOffsetY + 140);
+    positionDiv(img, 220, 140);
   }
-
-  /*
-   if (!mood && !!gifDiv) {
-    gifDiv.remove();
-  } else if (mood === "calm") {
-    background(calmGif);
-  } else if (mood === "happy") {
-    background(happyGif);
-  } else if (mood === "sad") {
-    background(sadGif);
-  } else if (mood === "anxious") {
-    background(anxiousDog);
-  }
-  */
 
   if (!mood && !!gifDiv) {
     gifDiv.remove();
