@@ -45,12 +45,15 @@ function setupTempoSlider() {
 }
 
 function toggleChooseTempo() {
+  console.log("Inside toggle choose tempo");
   if (!tempoConfirmed) {
+    console.log("Inside !tempoConfirmed", tempoConfirmed);
     confirmTempoButton.style('background-color', playingColour);
     confirmTempoButton.html('Change tempo');
     tempoConfirmed = true;
     tempoSlider.attribute('disabled', '');
   } else {
+    console.log("Inside tempoConfirmed", tempoConfirmed);
     confirmTempoButton.style('background-color', '#f2f2f2');
     confirmTempoButton.html('Confirm chosen tempo');
     tempoConfirmed = false;
@@ -120,6 +123,7 @@ function stopChord() {
   });
   mood = undefined;
   tonality = undefined;
+  toggleChooseTempo();
   tempoConfirmed = false;
 }
 
@@ -428,7 +432,7 @@ function getArticle() {
 Sound and hearing are mechanical matters. From a flute or a string or someone’s vocal organ, air density variations slam into our eardrums, causing ripples that jiggle some in-ear hair cells. So far, music exists only in one place: the mind of the player. But in the fraction of a second, as the neurological signals triggered by these hairs reach the brain, music arises also in the listener. The auditory cortex, limbic system and prefrontal cortex of the listener have awoken the mere vibrations and neural charge distributions into spirited life.
 <br>
 <br>
-Of course, one could argue that music conveys emotion simply because we use it for that exact purpose; it is merely a tool. It maps so well because we made the mapping. (Possibly contradicting this is the fact that people spontaneously sing or use music-like speech to catch the attention of infants*). But why auditory stimulus specifically and not, say, visual? Why is it that just one note can stir intense longing and nostalgia, hope or grit, in a way that one colour never could? Soundwaves are temporally dependent whereas visual art is usually not - is this a clue as to why it is music that is the closest thing we have to direct emotional transfer (albeit we all have our personal interpretations and associations)? Does the temporal unfolding of music mimic some nature of our emotional processes? One common aspect of this is the tendency of unexpected events in music to elicit strong emotion**.
+Of course, one could argue that music conveys emotion simply because we use it for that exact purpose; it is merely a tool. It maps so well because we made the mapping. (Possibly contradicting this is the fact that people spontaneously sing or use music-like speech to catch the attention of infants*). But why auditory stimulus specifically and not, say, visual? Why is it that just one note can stir intense longing and nostalgia, hope or grit, in a way that one colour never could? Sound waves are temporally dependent whereas visual art is usually not - is this a clue as to why it is music that is the closest thing we have to direct emotional transfer (albeit we all have our personal interpretations and associations)? Does the temporal unfolding of music mimic some nature of our emotional processes? One common aspect of this is the tendency of unexpected events in music to elicit strong emotion**.
 <br>
 <br>
 But more than that, it is the layering, the harmonies, or just one note in relation to others. We all know, instinctively, when a certain musical chord or interval is ‘sad’ or ‘happy’. The innate relational aspects of music must somehow, it seems, directly reflect some intrinsic aspect of emotional mechanisms. The explanation that it is a learned response feels hardly convincing, though it is true that large portions of our modern lives include music, and memories of certain periods can often be catalogued by the songs that accompanied them. Professor of psychology Patrik N. Juslin suggested a complex framework for the underlying mechanisms of emotional induction by music, involving six different mechanisms. These range from brain stem reflexes to the recollection of memories and actual subjective evaluation of the quality of the music, requiring vast and various areas of the brain. 
