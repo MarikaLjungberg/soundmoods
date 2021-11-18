@@ -45,15 +45,12 @@ function setupTempoSlider() {
 }
 
 function toggleChooseTempo() {
-  console.log("Inside toggle choose tempo");
   if (!tempoConfirmed) {
-    console.log("Inside !tempoConfirmed", tempoConfirmed);
     confirmTempoButton.style('background-color', playingColour);
     confirmTempoButton.html('Change tempo');
     tempoConfirmed = true;
     tempoSlider.attribute('disabled', '');
   } else {
-    console.log("Inside tempoConfirmed", tempoConfirmed);
     confirmTempoButton.style('background-color', '#f2f2f2');
     confirmTempoButton.html('Confirm chosen tempo');
     tempoConfirmed = false;
